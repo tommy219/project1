@@ -2,51 +2,44 @@
 
 //Function prototype
 
-int encryptionFunction(int testStatement);
+void encryptionFunction(char *testStatement, int cipherKey);
 
 int main()
 {
-    return 0;
+    char testStatement[1000];
+    int cipherKey;
+    scanf("%s", testStatement);                                            //Gets message to be tested from the 'input' file
+    scanf("%d", &cipherKey);                                               //Gets the key for the cipher from the 'input' file
+    encryptionFunction(testStatement, cipherKey);                          //Calling the result of the encryption function
 }
 
 //Function definition for encrypting the message
 
-int encryptionFunction(int testStatement)
-
+void encryptionFunction(char *testStatement, int cipherKey)
 {
-    char testStatement[1000], character;
-    int i, cipherKey = 1;
-    scanf("%s", testStatement);
-    
-    
-    for(i = 0; testStatement[i] != '\0'; ++i)
+    int i;
+    for(i = 0; testStatement[i] != '\0'; ++i)                              //Goes through each element of the string and changes its value
     {
-        character = testStatement[i];
-        if(character >= 65 && character < 90)  //65 and 90 are ASCII values for 'A' and 'Z'
+
+        if(testStatement[i] >= 65 && testStatement[i] < 90)                //65 and 90 are ASCII values for 'A' and 'Z'
         {
-            character += cipherKey;      //Character now becomes the encrypted letter
-            printf("%c", character);
+            testStatement[i] += cipherKey;                                 //Assigninging the individual character to its new value
         }
-       
-        else if(character == 90)         //Loops to beginning of alphabet when going past 'Z'
+        else if(testStatement[i] == 90)                                    
         {
-            character = (character - 90) + 64 + cipherKey;
-            printf("%c", character);
+            testStatement[i] = (testStatement[i] - 90) + 64 + cipherKey;   //Loops to beginning of alphabet when going past 'Z'
         }
-        
-        else if(character >= 97 && character < 122)  //97 and 122 are ASCII values for 'a' and 'z'
+        else if(testStatement[i] >= 97 && testStatement[i] < 122)          //97 and 122 are ASCII values for 'a' and 'z'
         {
-            character += cipherKey;      //Character now becomes the encrypted letter
-            printf("%c", character);
+            testStatement[i] += cipherKey;                                 //Assigninging the individual character to its new value
         }
-       
-        else if(character == 122)         //Loops to beginning of alphabet when going past 'z'
+        else if(testStatement[i] == 122)                                   
         {
-            character = (character - 122) + 96 + cipherKey;
-            printf("%c", character);
+            testStatement[i] = (testStatement[i] - 122) + 96 + cipherKey;  //Loops to beginning of alphabet when going past 'z'
         }
     }
-}   
+    printf("%s", testStatement);
+} 
     
     
     

@@ -1,8 +1,18 @@
 #include <stdio.h>
 
-//char encryptionFunction(char *wordTest);
+//Function prototype
+
+int encryptionFunction(int testStatement);
 
 int main()
+{
+    return 0;
+}
+
+//Function definition for encrypting the message
+
+int encryptionFunction(int testStatement)
+
 {
     char testStatement[1000], character;
     int i, cipherKey = 1;
@@ -36,5 +46,7 @@ int main()
             printf("%c", character);
         }
     }
+}   
     
-}
+    
+    

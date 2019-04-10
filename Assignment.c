@@ -11,7 +11,7 @@ FILE *InputDecryptR;
 
 int main()
 {
-    int Choice = 2;
+    int Choice = 1;
     printf("Please select an option: \n");
     printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\n");
     scanf("%d", &Choice);
@@ -67,7 +67,7 @@ void rotationEncrypt(char *rotMessage, int cipherKey)
             rotMessage[i] = tempCharacter;
         }
     }   
-    printf("The encrypted message is: %s", rotMessage);
+    printf("The encrypted message is: %s\n", rotMessage);
  }  
     
 
@@ -101,6 +101,6 @@ void rotationDecrypt(char *rotMessage, int cipherKey)
             rotMessage[i] = tempCharacter;
         }
     }   
-    printf("The decrypted message is: %s", rotMessage);
+    printf("The decrypted message is: %s\n", rotMessage);
  }  
     

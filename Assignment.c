@@ -9,6 +9,9 @@ void substitutionDecrypt(char *subMessage, int cipherKey);
 FILE *InputEncryptR;
 FILE *InputDecryptR;
 
+
+
+
 int main()
 {
     int Choice = 1;

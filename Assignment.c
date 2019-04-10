@@ -3,33 +3,39 @@
 //Function prototypes
 
 void rotationEncrypt(char *rotMessage, int cipherKey);                
-
 void rotationDecrypt(char *rotMessage, int cipherKey);
-
 void substituionEncrypt(char *subMessage, int cipherKey);
-
 void substitutionDecrypt(char *subMessage, int cipherKey);
+FILE *RotationInput;
+
 
 int main()
 {
-    char rotMessage[1000];
-    int cipherKey;
-    
+    int Choice =1;
     printf("Please select an option: \n");
-    printf("To encrypt by rotation, press A.\n");
-    printf("To decrypt by rotation, press B.\n");
+    printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\n");
+    scanf("%d", &Choice);
+   
+    int i;
+    char rotMessage[1000] = {0};
+    int cipherKey = 1;
+    switch(Choice) {
+        case 1:     RotationInput = fopen("RotationInput.txt", "r");
+                    i = 0;
+                    while(!feof(RotationInput)){
+                        fscanf(RotationInput, "%c", &rotMessage[i]);
+                        i++;
+                    }
+                    rotationEncrypt(rotMessage, cipherKey);
+                    break;
 
-    switch(input) {
-        case ’A’: rotationEncrypt(rotMessage, cipherKey); break;
-        case ’B’: rotationDecrypt(rotMessage, cipherKey); break;
-        default: printf("Unknown option %c\nPlease enter A or B\n", input);
+        case 2:     rotationDecrypt(rotMessage, cipherKey); 
+                    break;
+
+        default:    printf("Unknown option %c\nPlease enter A or B\n", Choice);
     }
-    
-    
-    
-    
-    scanf("%s", rotMessage);                                            //Gets message to be tested from the 'input' file
-    scanf("%d", &cipherKey);                                               //Gets the key for the cipher from the 'input' file
+
+
     
 }
 
@@ -38,9 +44,8 @@ int main()
 void rotationEncrypt(char *rotMessage, int cipherKey)
 {
     int i;
-    for(i = 0; rotMessage[i] != 0; ++i)                              //Goes through each element of the string and changes its value
+    for(i = 0; rotMessage[i] != 0; i++)                              //Goes through each element of the string and changes its value
     {
-
         if(rotMessage[i] >= 65 && rotMessage[i] < 90)                //65 and 90 are ASCII values for 'A' and 'Z'
         {
            rotMessage[i] += cipherKey;                                 //Assigninging the individual character to its new value
@@ -54,12 +59,12 @@ void rotationEncrypt(char *rotMessage, int cipherKey)
             rotMessage[i] -= 32;
             rotMessage[i] += cipherKey;                                 //Assigninging the individual character to its new value
         }
-        else if(rotMessage[i] == 122)                                   
+        else if(rotMessage[i] >= 122)                                   
         {
             rotMessage[i] = (rotMessage[i] - 122) + 64 + cipherKey;  //Loops to beginning of alphabet when going past 'z'
         }
     }
-    printf("The encrypted message is: %s\n\n", rotMessage);
+    printf("The encrypted message is: %s", rotMessage);
 }   
     
     
@@ -96,5 +101,3 @@ void rotationDecrypt(char *rotMessage, int cipherKey)
     printf("The decrypted message is: %s", rotMessage);
 }   
    
-    
-    

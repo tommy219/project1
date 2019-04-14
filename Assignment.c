@@ -6,36 +6,38 @@ void rotationEncrypt(char *rotMessage, int cipherKey);
 void rotationDecrypt(char *rotMessage, int cipherKey);
 void substituionEncrypt(char *subMessage, int cipherKey);
 void substitutionDecrypt(char *subMessage, int cipherKey);
-FILE *InputEncryptR;
-FILE *InputDecryptR;
 
-
+FILE *InputEncrypt;
+FILE *InputDecrypt;
 
 
 int main()
 {
     int Choice = 1;
+    int cipherKey;
+    
     printf("Please select an option: \n");
     printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\n");
     scanf("%d", &Choice);
+    printf("Please enter the cipher key:\n");
+    scanf("%d", &cipherKey);
    
     int i;
     char rotMessage[1000] = {0};                                                  //Elements set to zero to avoid a false rotMessage due to random data
-    int cipherKey = 3;
     switch(Choice) {
-        case 1:     InputEncryptR = fopen("InputEncryptR.txt", "r");                //Opening the text file to read
+        case 1:     InputEncrypt = fopen("InputEncrypt.txt", "r");                //Opening the text file to read
                     i = 0;
-                    while(!feof(InputEncryptR)){                                   
-                        fscanf(InputEncryptR, "%c", &rotMessage[i]);                 //Loop through the input data file to form a string of characters, stored in rotMessage
+                    while(!feof(InputEncrypt)){                                   
+                        fscanf(InputEncrypt, "%c", &rotMessage[i]);                 //Loop through the input data file to form a string of characters, stored in rotMessage
                         i++;
                     }
                     rotationEncrypt(rotMessage, cipherKey);
                     break;
 
-        case 2:     InputDecryptR = fopen("InputDecryptR.txt", "r");
+        case 2:     InputDecrypt = fopen("InputDecrypt.txt", "r");
                     i = 0;
-                    while(!feof(InputDecryptR)){
-                        fscanf(InputDecryptR, "%c", &rotMessage[i]);
+                    while(!feof(InputDecrypt)){
+                        fscanf(InputDecrypt, "%c", &rotMessage[i]);
                         i++;
                     }
                     rotationDecrypt(rotMessage, cipherKey); 
@@ -50,58 +52,47 @@ int main()
 void rotationEncrypt(char *rotMessage, int cipherKey)
 {
     int i;
-    for(i = 0; rotMessage[i] != 0; i++)                              //Goes through each element of the string and changes its value
+    char newCharacter;
+    for(i = 0; rotMessage[i] != 0; i++)                                //Goes through each element of the string and changes its value
     {
         char tempCharacter;
         tempCharacter = rotMessage[i];
-        if(tempCharacter >= 65 && tempCharacter <= 90)                //65 and 90 are ASCII values for 'A' and 'Z'
+        if(tempCharacter >= 65 && tempCharacter <= 90)
         {
-            tempCharacter += cipherKey;                                 //Assigninging the individual character to its new value
-            if(tempCharacter > 90)                                    
-                tempCharacter = tempCharacter - 26;   //Loops to beginning of alphabet when going past 'Z'
-            rotMessage[i] = tempCharacter;
+            newCharacter = (char)((tempCharacter - 65 + cipherKey) % 26 + 65);
+            rotMessage[i] = newCharacter;
         }
-        else if(tempCharacter >= 97 && rotMessage[i] <= 122)          //97 and 122 are ASCII values for 'a' and 'z'
+        else if(tempCharacter >= 97 && tempCharacter <= 122)
         {
-            tempCharacter -= 32;
-            tempCharacter += cipherKey;                                 //Assigninging the individual character to its new value
-            if(tempCharacter > 122)                                    
-                tempCharacter = tempCharacter - 26;   //Loops to beginning of alphabet when going past 'Z'
-            rotMessage[i] = tempCharacter;
+            tempCharacter -= 32; 
+            newCharacter = (char)((tempCharacter - 65 + cipherKey) % 26 + 65);
+            rotMessage[i] = newCharacter;
         }
     }   
     printf("The encrypted message is: %s\n", rotMessage);
  }  
     
 
-
-
 //Function Definition for decrypting the message
 
-
-
 void rotationDecrypt(char *rotMessage, int cipherKey)
-
 {
     int i;
-    for(i = 0; rotMessage[i] != 0; i++)                              //Goes through each element of the string and changes its value
+    char newCharacter;
+    for(i = 0; rotMessage[i] != 0; i++)                                //Goes through each element of the string and changes its value
     {
         char tempCharacter;
         tempCharacter = rotMessage[i];
-        if(tempCharacter >= 65 && tempCharacter <= 90)                //65 and 90 are ASCII values for 'A' and 'Z'
+        if(tempCharacter >= 65 && tempCharacter <= 90)
         {
-            tempCharacter -= cipherKey;                                 //Assigninging the individual character to its new value
-            if(tempCharacter < 90)                                    
-                tempCharacter = tempCharacter + 26;   //Loops to beginning of alphabet when going past 'Z'
-            rotMessage[i] = tempCharacter;
+            newCharacter = (char)((tempCharacter - 65 - cipherKey) % 26 + 65);
+            rotMessage[i] = newCharacter;
         }
-        else if(tempCharacter >= 97 && rotMessage[i] <= 122)          //97 and 122 are ASCII values for 'a' and 'z'
+        else if(tempCharacter >= 97 && tempCharacter <= 122)
         {
-            tempCharacter -= 32;
-            tempCharacter -= cipherKey;                                 //Assigninging the individual character to its new value
-            if(tempCharacter > 122)                                    
-                tempCharacter = tempCharacter + 26;   //Loops to beginning of alphabet when going past 'Z'
-            rotMessage[i] = tempCharacter;
+            tempCharacter -= 32; 
+            newCharacter = (char)((tempCharacter - 65 - cipherKey) % 26 + 65);
+            rotMessage[i] = newCharacter;
         }
     }   
     printf("The decrypted message is: %s\n", rotMessage);

@@ -85,13 +85,13 @@ void rotationDecrypt(char *rotMessage, int cipherKey)
         tempCharacter = rotMessage[i];
         if(tempCharacter >= 65 && tempCharacter <= 90)
         {
-            newCharacter = (char)((tempCharacter - 65 - cipherKey) % 26 + 65);
+            newCharacter = (char)((tempCharacter - 65 + 26 - cipherKey) % 26 + 65);
             rotMessage[i] = newCharacter;
         }
         else if(tempCharacter >= 97 && tempCharacter <= 122)
         {
             tempCharacter -= 32; 
-            newCharacter = (char)((tempCharacter - 65 - cipherKey) % 26 + 65);
+            newCharacter = (char)((tempCharacter - 65 + 26 - cipherKey) % 26 + 65);
             rotMessage[i] = newCharacter;
         }
     }   

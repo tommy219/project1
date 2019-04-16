@@ -5,7 +5,7 @@
 
 void rotationEncrypt(char *rotMessage, int rotKey);                
 void rotationDecrypt(char *rotMessage, int rotKey);
-void substituionEncrypt(char *subMessage, char *subKey);
+void substitutionEncrypt(char *subMessage, char *subKey);
 void substitutionDecrypt(char *subMessage, char *subKey);
 
 FILE *InputEncrypt;
@@ -123,7 +123,7 @@ void rotationDecrypt(char *rotMessage, int rotKey)
     
     
     
-void substituionEncrypt(char *subMessage, char *subKey)
+void substitutionEncrypt(char *subMessage, char *subKey)
 {
     char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";         //Alphabet declared as a constant string
     int i,j;

@@ -12,19 +12,21 @@ FILE *InputEncrypt;
 FILE *InputDecrypt;
 
 
+//-------------------------------- Main Function -----------------------------------------------------------------------------------------//
+
+
 int main()
 {
-    int Choice, i;
+    int Choice, i;                                           //'i' is for the while loop in the switch case statements
     
     int rotKey;
-   
-                  
-    char subKey[26];                                       //Initialising the array for the input of the key
-    char rotMessage[1000] = {0};                                                  //Elements set to zero to avoid a false rotMessage due to random data
+    char subKey[26];                                         //Initialising the array for the input of the key
+    
+    char rotMessage[1000] = {0};                                                  //Elements set to zero to avoid a false Message due to random data
     char subMessage[1000] = {0};
     
     printf("Please select an option: \n");
-    printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\nTo encrypt by substituion, press 3.\nTo decrypt by substitution, press 4.");
+    printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\nTo encrypt by substituion, press 3.\nTo decrypt by substitution, press 4.\n");
     scanf("%d", &Choice);
 
    
@@ -55,7 +57,7 @@ int main()
                     rotationDecrypt(rotMessage, rotKey); 
                     break;
         
-        case 3:     printf("Please enter the arrangement of the 26 character's of the key");
+        case 3:     printf("Please enter the arrangement of the 26 character's of the encryption key: ");
                     scanf("%s", subKey);                                                         //Input stored in subKey array
                     InputEncrypt = fopen("InputEncrypt.txt", "r");                //Opening the text file to read
                     i = 0;
@@ -66,6 +68,19 @@ int main()
                     }
                     substitutionEncrypt(subMessage, subKey);
                     break;
+                    
+        case 4:     printf("Plese enter the arrangement of the 26 character's of the decryption key: ");
+                    scanf("%s", subKey);
+                    InputDecrypt = fopen("InputDecrypt.txt", "r");
+                    i = 0;
+                    while(!feof(InputDecrypt))
+                    {
+                        fscanf(InputDecrypt, "%c", &subMessage[i]);
+                        i++;
+                    }
+                    substitutionDecrypt(subMessage, subKey);
+                    break;
+                    
         default:    printf("Unknown option %c\nPlease enter 1, 2, 3 or 4.\n", Choice);
     }
 }
@@ -131,12 +146,34 @@ void substitutionEncrypt(char *subMessage, char *subKey)
     {
         for(j = 0; j < 26; j++)
         {
-            if(alphabet[j] == subMessage[i])
+            if(alphabet[j] == subMessage[i])               //Makes sure index of message and the alphabet are lined up
             {
                 subMessage[i] = subKey[j];
                 break;                                     //Break is used to exit nested for loop when condition is met
             }
         }
     }
-    printf("The encrypted message is: %s", subMessage);    //Printing the ciphered message
+    printf("The encrypted message is: %s\n", subMessage);    //Printing the ciphered message
 }
+
+
+
+void substitutionDecrypt(char *subMessage, char *subKey)
+{
+    char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";         //Alphabet declared as a constant string
+    int i,j;
+
+    for(i = 0; subMessage[i] != '\0'; i++)
+    {
+       for(j = 0; j < 26; j++)
+       {
+           if(subMessage[i] == subKey[j])
+           {
+               subMessage[i] = alphabet[j];
+               break;
+           }
+       }
+    }
+    printf("The decrypted message is: %s\n", subMessage);   
+}
+

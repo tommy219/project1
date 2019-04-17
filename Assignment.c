@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 //Function prototypes
 
@@ -17,7 +16,7 @@ FILE *InputDecrypt;
 
 int main()
 {
-    int Choice, i;                                           //'i' is for the while loop in the switch case statements
+    int Choice, Input, i;                                           //'i' is for the while loop in the switch case statements
     
     int rotKey;
     char subKey[26];                                         //Initialising the array for the input of the key
@@ -26,7 +25,7 @@ int main()
     char subMessage[1000] = {0};
     
     printf("Please select an option: \n");
-    printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\nTo encrypt by substituion, press 3.\nTo decrypt by substitution, press 4.\n");
+    printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\nTo encrypt by substitution, press 3.\nTo decrypt by substitution, press 4.\n");
     scanf("%d", &Choice);
 
    
@@ -45,16 +44,36 @@ int main()
                     rotationEncrypt(rotMessage, rotKey);
                     break;
 
-        case 2:     printf("Please enter the cipher key:\n");
-                    scanf("%d", &rotKey);
-                    InputDecrypt = fopen("InputDecrypt.txt", "r");
-                    i = 0;
-                    while(!feof(InputDecrypt))
+        case 2:     printf("If you have the key, press 1.\nIf you don't have the key, press 2.\n");
+                    scanf("%d", &Input);
+                    switch(Input)
                     {
-                        fscanf(InputDecrypt, "%c", &rotMessage[i]);
-                        i++;
+                        case 1: printf("Please enter the cipher key:\n");
+                                scanf("%d", &rotKey);
+                                InputDecrypt = fopen("InputDecrypt.txt", "r");
+                                i = 0;
+                                while(!feof(InputDecrypt))
+                                {
+                                    fscanf(InputDecrypt, "%c", &rotMessage[i]);
+                                    i++;
+                                }
+                                rotationDecrypt(rotMessage, rotKey); 
+                                break;
+
+                        case 2: printf("All possible decryptions will now be displayed:\n\n");
+                                InputDecrypt = fopen("InputDecrypt.txt", "r");
+                                i = 0;
+                                while(!feof(InputDecrypt))
+                                {
+                                    fscanf(InputDecrypt, "%c", &rotMessage[i]);
+                                    i++;
+                                }
+                                for(rotKey = 0; rotKey < 26; rotKey++)
+                                {
+                                    rotationDecrypt(rotMessage, rotKey);
+                                }
+                                break;
                     }
-                    rotationDecrypt(rotMessage, rotKey); 
                     break;
         
         case 3:     printf("Please enter the arrangement of the 26 character's of the encryption key: ");

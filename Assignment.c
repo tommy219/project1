@@ -5,10 +5,11 @@
 void rotationEncrypt(char *rotMessage, int rotKey);                
 void rotationDecrypt(char *rotMessage, int rotKey);
 void substitutionEncrypt(char *subMessage, char *subKey);
-void substitutionDecrypt(char *subMessage, char *subKey);
+void substitutionDecryptK(char *subMessage, char *subKey);
+void substitutionDecrypt(char *subMessage);
 
-FILE *InputEncrypt;
-FILE *InputDecrypt;
+FILE *Message;
+
 
 
 //-------------------------------- Main Function -----------------------------------------------------------------------------------------//
@@ -28,17 +29,17 @@ int main()
     printf("To encrypt by rotation, press 1.\nTo decrypt by rotation, press 2.\nTo encrypt by substitution, press 3.\nTo decrypt by substitution, press 4.\n");
     scanf("%d", &Choice);
 
-   
+   //User menu for selecting the encryption and decryption preferences
     
     switch(Choice) 
     {
         case 1:     printf("Please enter the cipher key:\n");
                     scanf("%d", &rotKey);
-                    InputEncrypt = fopen("InputEncrypt.txt", "r");                //Opening the text file to read
+                    Message = fopen("Message.txt", "r");                //Opening the text file to read
                     i = 0;
-                    while(!feof(InputEncrypt))
+                    while(!feof(Message))
                     {                                   
-                        fscanf(InputEncrypt, "%c", &rotMessage[i]);               //Loop through the input data file to form a string of characters, stored in rotMessage
+                        fscanf(Message, "%c", &rotMessage[i]);               //Loop through the input data file to form a string of characters, stored in rotMessage
                         i++;
                     }
                     rotationEncrypt(rotMessage, rotKey);
@@ -50,22 +51,22 @@ int main()
                     {
                         case 1: printf("Please enter the cipher key:\n");
                                 scanf("%d", &rotKey);
-                                InputDecrypt = fopen("InputDecrypt.txt", "r");
+                                Message = fopen("Message.txt", "r");
                                 i = 0;
-                                while(!feof(InputDecrypt))
+                                while(!feof(Message))
                                 {
-                                    fscanf(InputDecrypt, "%c", &rotMessage[i]);
+                                    fscanf(Message, "%c", &rotMessage[i]);
                                     i++;
                                 }
                                 rotationDecrypt(rotMessage, rotKey); 
                                 break;
 
                         case 2: printf("All possible decryptions will now be displayed:\n\n");
-                                InputDecrypt = fopen("InputDecrypt.txt", "r");
+                                Message = fopen("InputDecrypt.txt", "r");
                                 i = 0;
-                                while(!feof(InputDecrypt))
+                                while(!feof(Message))
                                 {
-                                    fscanf(InputDecrypt, "%c", &rotMessage[i]);
+                                    fscanf(Message, "%c", &rotMessage[i]);
                                     i++;
                                 }
                                 for(rotKey = 0; rotKey < 26; rotKey++)
@@ -78,26 +79,43 @@ int main()
         
         case 3:     printf("Please enter the arrangement of the 26 character's of the encryption key: ");
                     scanf("%s", subKey);                                                         //Input stored in subKey array
-                    InputEncrypt = fopen("InputEncrypt.txt", "r");                //Opening the text file to read
+                    Message = fopen("Message.txt", "r");                //Opening the text file to read
                     i = 0;
-                    while(!feof(InputEncrypt))
+                    while(!feof(Message))
                     {                                   
-                        fscanf(InputEncrypt, "%c", &subMessage[i]);               //Loop through the input data file to form a string of characters, stored in subMessage
+                        fscanf(Message, "%c", &subMessage[i]);               //Loop through the input data file to form a string of characters, stored in subMessage
                         i++;
                     }
                     substitutionEncrypt(subMessage, subKey);
                     break;
                     
-        case 4:     printf("Plese enter the arrangement of the 26 character's of the decryption key: ");
-                    scanf("%s", subKey);
-                    InputDecrypt = fopen("InputDecrypt.txt", "r");
-                    i = 0;
-                    while(!feof(InputDecrypt))
+        case 4:     printf("If you have the key, press 1.\nIf you don't have the key, press 2.\n");
+                    scanf("%d", &Input);
+                    switch(Input)
                     {
-                        fscanf(InputDecrypt, "%c", &subMessage[i]);
-                        i++;
+                        case 1:     printf("Plese enter the arrangement of the 26 character's of the decryption key: ");
+                                    scanf("%s", subKey);
+                                    Message = fopen("Message.txt", "r");
+                                    i = 0;
+                                    while(!feof(Message))
+                                    {
+                                        fscanf(Message, "%c", &subMessage[i]);
+                                        i++;
+                                    }
+                                    substitutionDecryptK(subMessage, subKey);
+                                    break; 
+                        
+                        case 2:     Message = fopen("Message.txt", "r");
+                                    i = 0;
+                                    while(!feof(Message))
+                                    {
+                                        fscanf(Message, "%c", &subMessage[i]);
+                                        i++;
+                                    }
+                                    printf("%s", subMessage);
+                                    substitutionDecrypt(subMessage);
+                                    break; 
                     }
-                    substitutionDecrypt(subMessage, subKey);
                     break;
                     
         default:    printf("Unknown option %c\nPlease enter 1, 2, 3 or 4.\n", Choice);
@@ -127,7 +145,7 @@ void rotationEncrypt(char *rotMessage, int rotKey)
         }
     }   
     printf("The encrypted message is: %s\n", rotMessage);
- }  
+ }   
     
 
 //Function Definition for decrypting the message
@@ -177,7 +195,7 @@ void substitutionEncrypt(char *subMessage, char *subKey)
 
 
 
-void substitutionDecrypt(char *subMessage, char *subKey)
+void substitutionDecryptK(char *subMessage, char *subKey)
 {
     char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";         //Alphabet declared as a constant string
     int i,j;
@@ -194,5 +212,59 @@ void substitutionDecrypt(char *subMessage, char *subKey)
        }
     }
     printf("The decrypted message is: %s\n", subMessage);   
+}
+
+/*Decryption function without the key. It firstly works out the letters that appear the most in the encrypted text.
+It then prompts the user to input the order of most present letters, which are stored in an array.
+It then works its way through the encrypted text (subMessage) and assigns the most used letter to E then T and so on.*/
+
+
+void substitutionDecrypt(char *subMessage)
+{
+    int i, j, k, l, x;
+
+    int count[26] = {0}; 
+    char input[26] = {0};
+ 
+    //Calculate frequency of each letter
+    for(i = 0; subMessage[i] != '\0'; i++) 
+    {
+        x = subMessage[i] - 65;
+        count[x]++;
+    }
+
+    for (j = 0; j < 26; j++)
+        printf("%c occurs %d times in the string.\n", j + 65, count[j]);
+    
+    printf("Enter the letters in order of highest frequency to lowest frequency: ");
+    
+    for(k = 0; k <= 10; k++)
+        scanf("%c", &input[k-1]);
+
+   
+    for(l = 0; subMessage[l] != '\0'; l++)
+    {
+        if(subMessage[l] == input[0])
+            subMessage[l] = 'E';
+        else if(subMessage[l] == input[1])
+            subMessage[l] = 'T';
+        else if(subMessage[l] == input[2])
+            subMessage[l] = 'A';
+        else if(subMessage[l] == input[3])
+            subMessage[l] = 'O';
+        else if(subMessage[l] == input[4])
+            subMessage[l] = 'I';
+        else if(subMessage[l] == input[5])
+            subMessage[l] = 'N';
+        else if(subMessage[l] == input[6])
+            subMessage[l] = 'S';
+        else if(subMessage[l] == input[7])
+            subMessage[l] = 'H';
+        else if(subMessage[l] == input[8])
+            subMessage[l] = 'R';
+        else if(subMessage[l] == input[9])
+            subMessage[l] = 'D';
+    }
+    printf("The decrypted message is %s", subMessage);
 }
 

@@ -313,5 +313,6 @@ void substitutionDecrypt(char *subMessage)
             subMessage[l] = 'D';
     }
     printf("The decrypted message is %s", subMessage);   //Printing the entire 'decrypted' message to the screen
+    printf("\n");
 }
 

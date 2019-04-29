@@ -9,7 +9,7 @@ void substitutionDecryptK(char *subMessage, char *subKey);   //This decryption f
 void substitutionDecrypt(char *subMessage);                  //This decryption is for when key is unkown
 
 FILE *Message;                                               //Pointing to the file 'Message.txt'
-
+FILE *OutputMessage;
 
 
 //-------------------------------- Main Function -----------------------------------------------------------------------------------------//
@@ -46,6 +46,9 @@ int main()
                         i++;
                     }
                     rotationEncrypt(rotMessage, rotKey);                //Calling the encryption function with the message and the key as the arguments
+                    OutputMessage = fopen("OutputMessage.txt", "w");
+                    fprintf(OutputMessage, "%s", rotMessage);
+                    fclose(OutputMessage);
                     break;
 
         case 2:     printf("If you have the key, press 1.\nIf you don't have the key, press 2.\n");
@@ -65,10 +68,15 @@ int main()
                                     i++;
                                 }
                                 rotationDecrypt(rotMessage, rotKey);         //Calling the decryption function with the message and the key as the arguments
+                                
+                                OutputMessage = fopen("OutputMessage.txt", "w");
+                                fprintf(OutputMessage, "%s", rotMessage);
+                                fclose(OutputMessage);
                                 break;
 
                         case 2: printf("All possible decryptions will now be displayed:\n\n");
-                                Message = fopen("InputDecrypt.txt", "r");
+                                Message = fopen("Message.txt", "r");
+                                OutputMessage = fopen("OutputMessage.txt", "w");
                                 i = 0;
                                 while(!feof(Message))
                                 {
@@ -78,7 +86,10 @@ int main()
                                 for(rotKey = 0; rotKey < 26; rotKey++)         //The for loop goes through each one of the 26 possible keys for encryption by rotation
                                 {
                                     rotationDecrypt(rotMessage, rotKey);       //The 'decrypted' message is displayed each time the function is called
+                                    fprintf(OutputMessage, "%s\n", rotMessage);
                                 }
+                                fclose(OutputMessage);
+                                    
                                 break;
                     }
                     break;
@@ -93,6 +104,10 @@ int main()
                         i++;                                                  //Increment i to store next character from the message file in 'subMessage'
                     }
                     substitutionEncrypt(subMessage, subKey);                //Calling the encryption function with the message and the key as the arguments
+                    
+                    OutputMessage = fopen("OutputMessage.txt", "w");
+                    fprintf(OutputMessage, "%s", rotMessage);
+                    fclose(OutputMessage);
                     break;
                     
         case 4:     printf("If you have the key, press 1.\nIf you don't have the key, press 2.\n");
@@ -109,6 +124,10 @@ int main()
                                         i++;
                                     }
                                     substitutionDecryptK(subMessage, subKey);  //Calling the decryption function with the message and the key as the arguments
+                                    
+                                    OutputMessage = fopen("OutputMessage.txt", "w");
+                                    fprintf(OutputMessage, "%s", rotMessage);
+                                    fclose(OutputMessage);
                                     break; 
                         
                         case 2:     Message = fopen("Message.txt", "r");
@@ -119,6 +138,10 @@ int main()
                                         i++;
                                     }
                                     substitutionDecrypt(subMessage);          //Calling the decryption function with only the message as the argument
+                                    
+                                    OutputMessage = fopen("OutputMessage.txt", "w");
+                                    fprintf(OutputMessage, "%s", rotMessage);
+                                    fclose(OutputMessage);                                    
                                     break; 
                     }
                     break;
